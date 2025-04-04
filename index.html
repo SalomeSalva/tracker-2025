@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tracker 2025</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #app {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h2>Word Tracker 2025</h2>
+    
+    <label for="siteCode">Site Code:</label>
+    <select id="siteCode">
+      <option value="SAM">SAM</option>
+      <option value="UNI">UNI</option>
+      <option value="FED">FED</option>
+    </select>
+
+    <label for="nameInput">Name:</label>
+    <input type="text" id="nameInput" placeholder="Your name" />
+
+    <label for="soliInput">Soli #:</label>
+    <input type="text" id="soliInput" placeholder="e.g. W912EK25RA014" />
+
+    <button onclick="submitWord()">Submit</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function submitWord() {
+      const siteCode = document.getElementById("siteCode").value.trim();
+      const name = document.getElementById("nameInput").value.trim();
+      const soli = document.getElementById("soliInput").value.trim();
+
+      if (!siteCode || !name || !soli) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const fullWord = `${siteCode} | ${name} | ${soli}`;
+
+      const formData = new FormData();
+      formData.append("word", fullWord);
+
+      const response = await fetch("https://script.google.com/macros/s/AKfycby8cDsT3m8FABj14Dn4xhKxj88uu9FsbJOi7dnPKrQJBg0TctqST2vtUqYcOgzCMdpNzw/exec", {
+        method: "POST",
+        body: formData
+      });
+
+      const resultText = await response.text();
+      document.getElementById("result").textContent = resultText === "Available"
+        ? "✅ Word is Available!"
+        : "❌ Word is Taken!";
+    }
+  </script>
+</body>
+</html>
